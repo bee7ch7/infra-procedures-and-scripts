@@ -1,0 +1,12 @@
+---
+# handlers file for cloudwatch-agent-install
+- name: ReloadCW
+  shell: /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c file:"{{ configurationPath }}" -s
+
+- name: GetStatus
+  shell: amazon-cloudwatch-agent-ctl -a status
+  register: cw_status
+  notify: Show status
+
+- name: Show status
+  debug: var=cw_status.stdout

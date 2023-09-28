@@ -1,0 +1,3 @@
+---
+# defaults file for cloudwatch-agent-install
+configurationPath: /opt/aws/amazon-cloudwatch-agent/bin/config.json

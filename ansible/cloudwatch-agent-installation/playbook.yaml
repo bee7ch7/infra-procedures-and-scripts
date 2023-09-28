@@ -1,0 +1,52 @@
+---
+- name: Test connection
+  hosts: all
+  become: true
+
+  vars:
+    configurationPath: /opt/aws/amazon-cloudwatch-agent/bin/config.json
+
+  tasks:
+    - name: Ping servers
+      ping:
+
+    - name: Install CloudWatch agent
+      apt:
+        deb: https://s3.amazonaws.com/amazoncloudwatch-agent/ubuntu/amd64/latest/amazon-cloudwatch-agent.deb
+
+    - name: Create CloudWatch agent configuration
+      copy:
+        dest: "{{ configurationPath }}"
+        content: |
+          {
+            "metrics":{
+                "metrics_collected":{
+                  "mem":{
+                      "measurement":[
+                        "mem_used_percent"
+                      ],
+                      "metrics_collection_interval":60
+                  }
+                },
+                "append_dimensions": {
+                  "InstanceId": "${aws:InstanceId}"
+                }
+            }
+          }
+      notify: ReloadCW
+        
+    - name: Status Cloudwatch agent
+      shell: amazon-cloudwatch-agent-ctl -a status
+      register: cw_status
+
+    - debug: msg="{{ cw_status.stdout }}"
+
+    - name: Status Cloudwatch agent 2
+      service: 
+        name: amazon-cloudwatch-agent
+        state: started
+        enabled: yes
+
+  handlers:
+    - name: ReloadCW
+      shell: /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c file:"{{ configurationPath }}" -s
