@@ -1,0 +1,65 @@
+loki:
+
+  persistence:
+    enabled: true
+    accessModes:
+      - ReadWriteOnce
+    size: 1Gi
+    # storageClassName: gp2
+
+  env:
+    - name: AWS_ACCESS_KEY_ID
+      valueFrom:
+        secretKeyRef:
+          name: iam-loki-s3
+          key: AWS_ACCESS_KEY_ID
+    - name: AWS_SECRET_ACCESS_KEY
+      valueFrom:
+        secretKeyRef:
+          name: iam-loki-s3
+          key: AWS_SECRET_ACCESS_KEY
+  config:
+    auth_enabled: false
+    limits_config:
+      retention_period: 744h
+      max_query_length: 800h
+    compactor:
+      shared_store: s3
+      compaction_interval: 10m
+      retention_enabled: true
+      retention_delete_delay: 2h
+      retention_delete_worker_count: 150
+      working_directory: /data/loki/boltdb-shipper-compactor
+    schema_config:
+      configs:
+        - from: 2021-05-12
+          store: boltdb-shipper
+          object_store: s3
+          schema: v11
+          index:
+            prefix: loki_index_
+            period: 24h
+    storage_config:
+      aws:
+        s3: s3://eu-central-1/dev-logbucket-loki
+        s3forcepathstyle: true
+        bucketnames: dev-logbucket-loki
+        region: eu-central-1
+        insecure: false
+        sse:
+          type: SSE-S3
+      boltdb_shipper:
+        active_index_directory: /data/loki/boltdb-shipper-active
+        cache_location: /data/loki/boltdb-shipper-cache
+        cache_ttl: 24h
+        shared_store: s3
+grafana:
+  enabled: true
+  sidecar:
+    datasources:
+      enabled: true
+  image:
+    tag: 8.3.5
+  # grafana.ini:
+  #   users:
+  #     default_theme: light
