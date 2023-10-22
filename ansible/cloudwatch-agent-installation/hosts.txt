@@ -1,3 +1,16 @@
-[dev_servers]
-dev1 ansible_host=1.2.3.4
+[staging_servers]
+staging-airbyte
 
+[demo_servers]
+demo-airbyte
+
+[prod_servers]
+prod-airbyte
+
+[prod_servers:vars]
+ansible_user=ubuntu
+ansible_ssh_private_key_file="/root/.ssh/prod_ec2_airbyte.pem"
+
+[demo_servers:vars]
+ansible_user=ubuntu
+ansible_ssh_private_key_file="/root/.ssh/demo_ec2_airbyte.pem"
