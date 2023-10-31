@@ -67,6 +67,7 @@ metadata:
 spec:
   hosts:
     - client
+    # - client-1.home-k8s.lab # if ingress used (ingress nginx, for example)
   http:
     - route:
         - destination:

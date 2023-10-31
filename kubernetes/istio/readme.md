@@ -57,6 +57,12 @@ To patch deployment:
 ```
 kubectl patch deployment ingress-nginx-controller -n ingress-nginx -p '{"spec":{"template":{"metadata":{"labels":{"istio":"monitor","sidecar.istio.io/inject":"true", "app":"ingress-nginx-controller", "version":"v1"}}}}}'
 ```
+
 Add `ingress-nginx` namespace to `podMonitor` as well.
+
+Also, addtional `host` specified in Ingress must be set in VirtualService as well.
+```
+kubectl patch virtualservice client -n backend --type='json' -p='[{"op": "add", "path": "/spec/hosts/-", "value": "client-1.home-k8s.lab"}]'
+```
 
 ![Alt text](image.png)
