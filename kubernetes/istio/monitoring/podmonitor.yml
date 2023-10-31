@@ -1,0 +1,21 @@
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: istio-pods
+  namespace: monitoring
+  labels:
+    app: kube-prometheus-stack-prometheus # this lables must match prometheus labels 
+    app.kubernetes.io/instance: prometheus-stack # this lables must match prometheus labels 
+    release: prometheus-stack # this lables must match prometheus labels 
+spec:
+  namespaceSelector:
+    matchNames:
+      - backend
+      - staging
+  selector:
+    matchLabels:
+      istio: monitor # labels from pods
+  podMetricsEndpoints:
+    - port: http-envoy-prom # named port from istio-proxy sidecar
+      path: stats/prometheus

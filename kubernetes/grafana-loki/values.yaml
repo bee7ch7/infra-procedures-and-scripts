@@ -60,6 +60,14 @@ grafana:
       enabled: true
   image:
     tag: 8.3.5
+
+  persistence:
+    enabled: true
+    accessModes:
+      - ReadWriteOnce
+    size: 1Gi
+    # storageClassName: gp2
+
   # grafana.ini:
   #   users:
   #     default_theme: light
