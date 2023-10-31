@@ -3,8 +3,9 @@ kind: Ingress
 metadata:
   name: web-app
   annotations:
-    kubernetes.io/ingress.class: "nginx"
+    
 spec:
+  ingressClassName: nginx
   rules:
   - host: web-app-1.home-k8s.lab
     http:

@@ -39,3 +39,12 @@ external_services:
 k apply -f monitoring/
 ```
 Read comments inside yaml to have full understanding
+
+# Nginx ingress controller with Istio:
+In order to use existing nginx ingress controller and see graphs in Kiali patching deployment\daemonset of nginx ingress controller is required.
+
+```
+kubectl patch deployment ingress-nginx-controller -n ingress-nginx -p '{"spec":{"template":{"metadata":{"labels":{"istio
+":"monitor","sidecar.istio.io/inject":"true"}}}}}'
+```
+Add `ingress-nginx` namespace to `podMonitor` as well.
