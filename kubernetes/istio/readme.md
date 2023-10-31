@@ -48,3 +48,5 @@ kubectl patch deployment ingress-nginx-controller -n ingress-nginx -p '{"spec":{
 ":"monitor","sidecar.istio.io/inject":"true"}}}}}'
 ```
 Add `ingress-nginx` namespace to `podMonitor` as well.
+
+![Alt text](image.png)
