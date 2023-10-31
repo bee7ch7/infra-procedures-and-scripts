@@ -43,9 +43,19 @@ Read comments inside yaml to have full understanding
 # Nginx ingress controller with Istio:
 In order to use existing nginx ingress controller and see graphs in Kiali patching deployment\daemonset of nginx ingress controller is required.
 
+Next values required to display graph correctly:
 ```
-kubectl patch deployment ingress-nginx-controller -n ingress-nginx -p '{"spec":{"template":{"metadata":{"labels":{"istio
-":"monitor","sidecar.istio.io/inject":"true"}}}}}'
+"app":"ingress-nginx-controller" 
+"version":"v1"
+```
+Required labels to inject sidecar and monitor by podMonitor
+```
+"istio":"monitor"
+"sidecar.istio.io/inject":"true"
+```
+To patch deployment:
+```
+kubectl patch deployment ingress-nginx-controller -n ingress-nginx -p '{"spec":{"template":{"metadata":{"labels":{"istio":"monitor","sidecar.istio.io/inject":"true", "app":"ingress-nginx-controller", "version":"v1"}}}}}'
 ```
 Add `ingress-nginx` namespace to `podMonitor` as well.
 
