@@ -914,6 +914,12 @@ grafana:
 
   adminPassword: P@rol2023
 
+  ## OR USE EXISTING SECRET
+  # admin:
+  #   existingSecret: grafana-admin-password
+  #   userKey: admin-user
+  #   passwordKey: admin-password
+
   rbac:
     ## If true, Grafana PSPs will be created
     ##
@@ -957,6 +963,12 @@ grafana:
     # - secretName: grafana-general-tls
     #   hosts:
     #   - grafana.example.com
+  persistence:
+    enabled: true
+    storageClassName: standard
+    accessModes:
+      - ReadWriteOnce
+    size: 1Gi
 
   sidecar:
     dashboards:
